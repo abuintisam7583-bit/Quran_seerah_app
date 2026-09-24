@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quran - Page {{ page_number }}</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    background:#eee9df;
+    color:#222;
+    font-family:Arial,sans-serif;
+}
+
+header{
+    background:#123d2a;
+    padding:15px 18px;
+}
+
+header a{
+    color:white;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.container{
+    max-width:900px;
+    margin:auto;
+    padding:10px;
+}
+
+.controls{
+    background:white;
+    padding:12px;
+    margin:10px 0;
+    border-radius:14px;
+    display:flex;
+    justify-content:center;
+    gap:8px;
+}
+
+.controls input{
+    width:90px;
+    padding:10px;
+    border:1px solid #ccc;
+    border-radius:9px;
+    text-align:center;
+}
+
+.controls button{
+    background:#123d2a;
+    color:white;
+    border:0;
+    border-radius:9px;
+    padding:10px 16px;
+    font-weight:bold;
+}
+
+.mushaf-page{
+    background:#fffdf7;
+    border:1px solid #d8d0c0;
+    border-radius:8px;
+    padding:22px 15px;
+    box-shadow:0 4px 18px rgba(0,0,0,.08);
+}
+
+.page-top{
+    text-align:center;
+    border-bottom:1px solid #d8d0c0;
+    padding-bottom:14px;
+    margin-bottom:18px;
+}
+
+.page-title{
+    font-size:22px;
+    font-weight:bold;
+    color:#123d2a;
+}
+
+.page-count{
+    color:#777;
+    margin-top:5px;
+    font-size:14px;
+}
+
+.surah-heading{
+    text-align:center;
+    margin:18px 0 12px;
+    color:#123d2a;
+    font-weight:bold;
+    font-size:18px;
+}
+
+.bismillah{
+    direction:rtl;
+    text-align:center;
+    font-family:"Noto Naskh Arabic","Amiri","Traditional Arabic",serif;
+    font-size:28px;
+    line-height:2;
+    margin:18px 0 20px;
+}
+
+.quran-text{
+    direction:rtl;
+    text-align:justify;
+    font-family:"Noto Naskh Arabic","Amiri","Traditional Arabic",serif;
+    font-size:29px;
+    line-height:2.15;
+}
+
+.ayah{
+    display:inline;
+}
+
+.ayah-marker{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:29px;
+    height:29px;
+    margin:0 5px;
+    border:1px solid #123d2a;
+    border-radius:50%;
+    color:#123d2a;
+    font-size:11px;
+    font-family:Arial,sans-serif;
+    vertical-align:middle;
+    direction:ltr;
+}
+
+.translations{
+    margin-top:30px;
+    border-top:1px solid #d8d0c0;
+    padding-top:18px;
+}
+
+.translation{
+    background:#f7f4ed;
+    border-radius:12px;
+    padding:14px;
+    margin-bottom:12px;
+    line-height:1.7;
+}
+
+.translation-title{
+    font-weight:bold;
+    color:#123d2a;
+    margin-bottom:6px;
+}
+
+.navigation{
+    display:flex;
+    gap:10px;
+    margin-top:15px;
+}
+
+.nav-button{
+    flex:1;
+    text-align:center;
+    padding:13px;
+    background:#123d2a;
+    color:white;
+    text-decoration:none;
+    border-radius:10px;
+    font-weight:bold;
+}
+
+.disabled{
+    background:#bbb;
+}
+
+.page-bottom{
+    text-align:center;
+    margin-top:20px;
+    padding-top:12px;
+    border-top:1px solid #d8d0c0;
+    color:#777;
+}
+
+@media(max-width:600px){
+    .quran-text{
+        font-size:25px;
+        line-height:2.05;
+    }
+
+    .mushaf-page{
+        padding:18px 11px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<a href="/quran">← Back to Quran</a>
+</header>
+
+<main class="container">
+
+<form class="controls" onsubmit="event.preventDefault();goToPage();">
+<input id="pageInput" type="number" min="1" max="{{ total_pages }}" placeholder="Page">
+<button type="submit">Go</button>
+</form>
+
+<section class="mushaf-page">
+
+<div class="page-top">
+<div class="page-title">📖 Quran</div>
+<div class="page-count">
+Page {{ page_number }} of {{ total_pages }}
+</div>
+</div>
+
+<div class="quran-text">
+
+{% set current_surah = namespace(id=None) %}
+
+{% for verse in verses %}
+
+{% if current_surah.id != verse['surah_number'] %}
+
+{% if current_surah.id is not none %}
+<br><br>
+{% endif %}
+
+<div class="surah-heading">
+سورة {{ verse['surah_name_en'] }}
+</div>
+
+{% if verse['surah_number'] != 9 %}
+<div class="bismillah">
+بِسْمِ اللَّهِ الرَّحْمَـٰنِ الرَّحِيمِ
+{% if verse['surah_number'] == 1 %}
+<span class="ayah-marker">1</span>
+{% endif %}
+</div>
+{% endif %}
+
+{% set current_surah.id = verse['surah_number'] %}
+
+{% endif %}
+
+<span class="ayah">
+
+{% if verse['verse_number'] == 1 and verse['surah_number'] != 9 %}
+
+{% if verse['surah_number'] == 1 %}
+{% else %}
+{{ verse['arabic_text'].replace('بِسْمِ اللَّهِ الرَّحْمَـٰنِ الرَّحِيمِ ', '') }}
+{% endif %}
+
+{% else %}
+
+{{ verse['arabic_text'] }}
+
+{% endif %}
+
+{% if not (verse['surah_number'] == 1 and verse['verse_number'] == 1) %}
+<span class="ayah-marker">{{ verse['verse_number'] }}</span>
+{% endif %}
+
+</span>
+
+{% endfor %}
+
+</div>
+
+<div class="translations">
+
+{% for verse in verses %}
+
+{% if verse['translation_en'] %}
+<div class="translation">
+<div class="translation-title">
+English — {{ verse['surah_name_en'] }} {{ verse['verse_number'] }}
+</div>
+{{ verse['translation_en'] }}
+</div>
+{% endif %}
+
+{% if verse['translation_am'] %}
+<div class="translation">
+<div class="translation-title">
+አማርኛ — {{ verse['surah_name_en'] }} {{ verse['verse_number'] }}
+</div>
+{{ verse['translation_am'] }}
+</div>
+{% endif %}
+
+{% endfor %}
+
+</div>
+
+<div class="page-bottom">
+— {{ page_number }} —
+</div>
+
+</section>
+
+<nav class="navigation">
+
+{% if page_number > 1 %}
+<a class="nav-button" href="/quran/page/{{ page_number - 1 }}">
+← Previous
+</a>
+{% else %}
+<span class="nav-button disabled">← Previous</span>
+{% endif %}
+
+{% if page_number < total_pages %}
+<a class="nav-button" href="/quran/page/{{ page_number + 1 }}">
+Next →
+</a>
+{% else %}
+<span class="nav-button disabled">Next →</span>
+{% endif %}
+
+</nav>
+
+</main>
+
+<script>
+function goToPage(){
+    const page=parseInt(document.getElementById("pageInput").value,10);
+
+    if(page>=1 && page<=604){
+        window.location.href="/quran/page/"+page;
+    }else{
+        alert("Enter a page number from 1 to 604.");
+    }
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Juz {{ juz_number }} - Quran</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f7f9;
+            color: #222;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #666;
+        }
+
+        .verse {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .surah-name {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #555;
+        }
+
+        .arabic {
+            direction: rtl;
+            text-align: right;
+            font-size: 26px;
+            line-height: 2;
+            margin-bottom: 15px;
+        }
+
+        .verse-number {
+            display: inline-block;
+            font-size: 14px;
+            border: 1px solid #aaa;
+            border-radius: 50%;
+            padding: 3px 7px;
+            margin-left: 8px;
+        }
+
+        .translation {
+            line-height: 1.7;
+            margin-top: 10px;
+        }
+
+        .translation-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin: 25px 0;
+        }
+
+        .navigation a {
+            text-decoration: none;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 12px 16px;
+            color: #222;
+        }
+
+        .back {
+            display: inline-block;
+            margin-bottom: 20px;
+            text-decoration: none;
+            color: #333;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <a href="/juz" class="back">← All Juz</a>
+
+    <div class="header">
+        <h1>📖 Juz {{ juz_number }}</h1>
+        <p>
+            {{ juz_info.first_verse_key }}
+            →
+            {{ juz_info.last_verse_key }}
+        </p>
+    </div>
+
+    <div class="navigation">
+        {% if previous_juz %}
+            <a href="/quran/juz/{{ previous_juz }}">← Previous Juz</a>
+        {% else %}
+            <span></span>
+        {% endif %}
+
+        {% if next_juz %}
+            <a href="/quran/juz/{{ next_juz }}">Next Juz →</a>
+        {% endif %}
+    </div>
+
+    {% for verse in verses %}
+
+        <div class="verse">
+
+            <div class="surah-name">
+                Surah {{ verse.surah_number }} — {{ verse.surah_name_en }}
+            </div>
+
+            <div class="arabic">
+                {{ verse.arabic_text }}
+                <span class="verse-number">
+                    {{ verse.verse_number }}
+                </span>
+            </div>
+
+            {% if verse.translation_en %}
+                <div class="translation">
+                    <div class="translation-title">English</div>
+                    {{ verse.translation_en }}
+                </div>
+            {% endif %}
+
+            {% if verse.translation_am %}
+                <div class="translation">
+                    <div class="translation-title">አማርኛ</div>
+                    {{ verse.translation_am }}
+                </div>
+            {% endif %}
+
+        </div>
+
+    {% endfor %}
+
+    <div class="navigation">
+        {% if previous_juz %}
+            <a href="/quran/juz/{{ previous_juz }}">← Previous Juz</a>
+        {% else %}
+            <span></span>
+        {% endif %}
+
+        <a href="/juz">All Juz</a>
+
+        {% if next_juz %}
+            <a href="/quran/juz/{{ next_juz }}">Next Juz →</a>
+        {% endif %}
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Bookmarks - Quran Seerah App</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f7f6;
+            color: #222;
+        }
+
+        header {
+            background: #123d2a;
+            color: white;
+            padding: 18px 20px;
+        }
+
+        header a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 25px 16px 50px;
+        }
+
+        .page-header {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+        }
+
+        .page-header h1 {
+            margin: 0 0 8px;
+            color: #123d2a;
+        }
+
+        .page-header p {
+            margin: 0;
+            color: #666;
+        }
+
+        .bookmark-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+        }
+
+        .bookmark-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .surah-link {
+            color: #123d2a;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .verse-number {
+            display: inline-block;
+            background: #eef3ef;
+            color: #123d2a;
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .arabic {
+            direction: rtl;
+            text-align: right;
+            font-size: 25px;
+            line-height: 2;
+            margin: 15px 0;
+        }
+
+        .translation {
+            margin-top: 14px;
+            padding-top: 12px;
+            border-top: 1px solid #eee;
+            line-height: 1.8;
+            color: #444;
+        }
+
+        .label {
+            font-size: 12px;
+            font-weight: bold;
+            color: #123d2a;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .button {
+            flex: 1;
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            border: none;
+            padding: 11px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .open-button {
+            background: #123d2a;
+            color: white;
+        }
+
+        .remove-button {
+            background: #f1eeee;
+            color: #a33;
+        }
+
+        .empty {
+            background: white;
+            text-align: center;
+            padding: 45px 20px;
+            border-radius: 16px;
+            color: #666;
+        }
+
+        .empty-icon {
+            font-size: 45px;
+            margin-bottom: 12px;
+        }
+
+        @media (max-width: 600px) {
+            .arabic {
+                font-size: 22px;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+        }
+    
+.bookmark-note {
+    margin: 12px 0;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: #f8f9fa;
+    border-left: 4px solid #888;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+    <a href="/">← Home</a>
+    &nbsp;&nbsp;
+    <a href="/quran">📖 Quran</a>
+</header>
+
+<main class="container">
+
+    <section class="page-header">
+        <h1>🔖 My Bookmarks</h1>
+        <p>Keep the verses you want to return to later.</p>
+    </section>
+
+    {% if bookmarks %}
+
+        {% for bookmark in bookmarks %}
+
+        <article class="bookmark-card">
+
+            <div class="bookmark-top">
+
+                <a
+                    class="surah-link"
+                    href="/quran/{{ bookmark['surah_number'] }}"
+                >
+                    {{ bookmark['surah_name'] }}
+                </a>
+
+                <span class="verse-number">
+                    Verse {{ bookmark['verse_number'] }}
+                </span>
+
+            </div>
+
+            <div class="arabic">
+                {{ bookmark['arabic_text'] }}
+            </div>
+
+            {% if bookmark['translation_en'] %}
+            <div class="translation">
+
+                <div class="label">
+                    English
+                </div>
+
+                {{ bookmark['translation_en'] }}
+
+            </div>
+            {% endif %}
+
+            {% if bookmark['note'] %}
+            <div class="bookmark-note">
+                📝 <strong>Note:</strong> {{ bookmark['note'] }}
+            </div>
+            {% endif %}
+
+            {% if bookmark['translation_am'] %}
+            <div class="translation">
+
+                <div class="label">
+                    Amharic
+                </div>
+
+                {{ bookmark['translation_am'] }}
+
+            </div>
+            {% endif %}
+
+            <div class="actions">
+
+                <a
+                    class="button open-button"
+                    href="/quran/{{ bookmark['surah_number'] }}#verse-{{ bookmark['verse_id'] }}"
+                >
+                    📖 Open Verse
+                </a>
+
+                <form
+                    method="POST"
+                    action="/remove-bookmark/{{ bookmark['bookmark_id'] }}"
+                    style="flex:1;"
+                >
+                    <button
+                        type="submit"
+                        class="button remove-button"
+                    >
+                        🗑️ Remove
+                    </button>
+                </form>
+
+            </div>
+
+        </article>
+
+        {% endfor %}
+
+    {% else %}
+
+        <section class="empty">
+
+            <div class="empty-icon">
+                🔖
+            </div>
+
+            <h2>No Bookmarks Yet</h2>
+
+            <p>
+                Bookmark Quran verses while reading them.
+            </p>
+
+            <a
+                class="button open-button"
+                href="/quran"
+                style="max-width:220px;margin:20px auto 0;"
+            >
+                Browse Quran
+            </a>
+
+        </section>
+
+    {% endif %}
+
+</main>
+
+</body>
+</html>

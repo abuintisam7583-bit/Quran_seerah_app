@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>{{ surah.name_english }} - Quran Reader</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #f4f7f6;
+    color: #222;
+    font-family: Arial, sans-serif;
+}
+
+.header {
+    background: #0b6b4f;
+    color: white;
+    text-align: center;
+    padding: 20px 15px;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 27px;
+}
+
+.header p {
+    margin: 7px 0 0;
+}
+
+.container {
+    max-width: 900px;
+    margin: auto;
+    padding: 15px;
+}
+
+.top-link {
+    display: inline-block;
+    margin-bottom: 12px;
+    color: #0b6b4f;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.controls {
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.07);
+}
+
+.controls-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+select,
+button,
+.button {
+    padding: 10px 13px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: white;
+    font-size: 15px;
+    cursor: pointer;
+    text-decoration: none;
+    color: #222;
+}
+
+select {
+    min-width: 190px;
+}
+
+.green {
+    background: #0b6b4f;
+    color: white;
+    border-color: #0b6b4f;
+}
+
+.verse {
+    background: white;
+    border-radius: 14px;
+    padding: 18px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.07);
+}
+
+.verse-number {
+    width: 36px;
+    height: 36px;
+    line-height: 36px;
+    text-align: center;
+    background: #0b6b4f;
+    color: white;
+    border-radius: 50%;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.arabic {
+    direction: rtl;
+    text-align: right;
+    font-size: 30px;
+    line-height: 2.1;
+    margin: 10px 0 20px;
+    font-family: "Amiri", "Noto Naskh Arabic", serif;
+}
+
+.translation {
+    background: #f1f8f5;
+    border-left: 4px solid #0b6b4f;
+    border-radius: 8px;
+    padding: 13px 15px;
+    font-size: 17px;
+    line-height: 1.7;
+}
+
+.translation-title {
+    color: #0b6b4f;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+.tafsir {
+    margin-top: 15px;
+    background: #fff8e5;
+    border-left: 4px solid #d89b00;
+    padding: 14px;
+    border-radius: 8px;
+    line-height: 1.7;
+}
+
+.tafsir-title {
+    color: #936900;
+    font-weight: bold;
+    margin-bottom: 7px;
+}
+
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 15px;
+}
+
+.actions form {
+    margin: 0;
+}
+
+.note-box {
+    width: 100%;
+    margin-top: 12px;
+}
+
+.note-box textarea {
+    width: 100%;
+    min-height: 80px;
+    resize: vertical;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 15px;
+}
+
+.note-box button {
+    margin-top: 7px;
+    background: #0b6b4f;
+    color: white;
+    border-color: #0b6b4f;
+}
+
+.navigation {
+    display: flex;
+    gap: 10px;
+    margin: 25px 0;
+}
+
+.navigation a {
+    flex: 1;
+    background: #0b6b4f;
+    color: white;
+    text-align: center;
+    padding: 13px;
+    border-radius: 9px;
+    text-decoration: none;
+}
+
+.progress-box {
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.07);
+}
+
+.progress-bar {
+    height: 10px;
+    background: #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 8px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #0b6b4f;
+    width: 0%;
+}
+
+@media (max-width: 600px) {
+
+    .container {
+        padding: 10px;
+    }
+
+    .header h1 {
+        font-size: 22px;
+    }
+
+    .controls-row {
+        flex-direction: column;
+    }
+
+    select,
+    .controls-row .button {
+        width: 100%;
+    }
+
+    .arabic {
+        font-size: 25px;
+        line-height: 2;
+    }
+
+    .translation {
+        font-size: 16px;
+    }
+
+    .navigation {
+        flex-direction: column;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+
+    <h1>{{ surah.name_english }}</h1>
+
+    <p>
+        سورة {{ surah.name_arabic }}
+        ·
+        {{ verses|length }} Verses
+    </p>
+
+</div>
+
+
+<div class="container">
+
+<a class="top-link" href="/quran">
+← Back to Quran
+</a>
+
+
+<div class="controls">
+
+<div class="controls-row">
+
+<select onchange="changeLanguage(this.value)">
+
+<option value="en"
+{% if selected_language == "en" %}selected{% endif %}>
+🇬🇧 English
+</option>
+
+<option value="am"
+{% if selected_language == "am" %}selected{% endif %}>
+🇪🇹 Amharic
+</option>
+
+<option value="om"
+{% if selected_language == "om" %}selected{% endif %}>
+Afaan Oromo
+</option>
+
+<option value="aa"
+{% if selected_language == "aa" %}selected{% endif %}>
+Afar
+</option>
+
+<option value="so"
+{% if selected_language == "so" %}selected{% endif %}>
+Somali
+</option>
+
+</select>
+
+
+<a
+class="button green"
+href="/quran/{{ surah.number }}?lang={{ selected_language }}&tafsir={% if show_tafsir %}0{% else %}1{% endif %}"
+>
+{% if show_tafsir %}
+Hide Tafsir
+{% else %}
+📖 Show Tafsir
+{% endif %}
+</a>
+
+<a class="button" href="/bookmarks">
+🔖 My Bookmarks
+</a>
+
+</div>
+
+</div>
+
+
+{% if progress %}
+
+<div class="progress-box">
+
+<strong>Reading Progress</strong>
+
+<div>
+Verse {{ progress.verse_number }}
+of {{ surah.verses_count }}
+</div>
+
+<div class="progress-bar">
+
+<div
+class="progress-fill"
+style="width: {{ ((progress.verse_number / verses|length) * 100)|round(0) }}%;"
+></div>
+
+</div>
+
+</div>
+
+{% endif %}
+
+
+{% for verse in verses %}
+
+<div class="verse">
+
+<div class="verse-number">
+{{ verse.verse_number }}
+</div>
+
+
+<div class="arabic">
+{{ verse.arabic_text }}
+</div>
+
+
+<div class="translation">
+
+<div class="translation-title">
+{{ language_name }}
+</div>
+
+
+{% if selected_language == "en" %}
+
+{{ verse.translation_en }}
+
+{% elif selected_language == "am" %}
+
+{{ verse.translation_am }}
+
+{% else %}
+
+{{ translation_map.get(verse.id, "Translation not available.") }}
+
+{% endif %}
+
+</div>
+
+
+{% if show_tafsir %}
+
+<div class="tafsir">
+
+<div class="tafsir-title">
+📖 Tafsir
+</div>
+
+{{ tafsir_map.get(verse.id, "Tafsir not available.") }}
+
+</div>
+
+{% endif %}
+
+
+<div class="actions">
+
+<form method="POST" action="/bookmark/{{ verse.id }}">
+
+<button type="submit">
+
+{% if verse.is_bookmarked %}
+★ Bookmarked
+{% else %}
+☆ Bookmark
+{% endif %}
+
+</button>
+
+</form>
+
+
+<form method="POST" action="/save-progress/{{ verse.id }}">
+
+<button type="submit">
+✓ Save Progress
+</button>
+
+</form>
+
+</div>
+
+
+<div class="note-box">
+
+<form method="POST" action="/save-note/{{ verse.id }}">
+
+<textarea
+name="note"
+placeholder="Write a note about this verse..."
+>{% if verse.bookmark_note %}{{ verse.bookmark_note }}{% endif %}</textarea>
+
+<button type="submit">
+📝 Save Note
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+
+<div class="navigation">
+
+{% if previous_surah %}
+
+<a href="/quran/{{ previous_surah.number }}?lang={{ selected_language }}{% if show_tafsir %}&tafsir=1{% endif %}">
+
+← {{ previous_surah.name_english }}
+
+</a>
+
+{% endif %}
+
+
+{% if next_surah %}
+
+<a href="/quran/{{ next_surah.number }}?lang={{ selected_language }}{% if show_tafsir %}&tafsir=1{% endif %}">
+
+{{ next_surah.name_english }} →
+
+</a>
+
+{% endif %}
+
+</div>
+
+</div>
+
+
+<script>
+
+function changeLanguage(language) {
+
+    const url = new URL(window.location.href);
+
+    url.searchParams.set("lang", language);
+
+    window.location.href = url.toString();
+
+}
+
+</script>
+
+</body>
+</html>

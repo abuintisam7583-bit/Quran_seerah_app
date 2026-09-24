@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ surah.name_english }} - Quran</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f7f9;
+            color: #222;
+        }
+
+        .header {
+            background: #0b6b4f;
+            color: white;
+            padding: 18px 15px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 25px;
+        }
+
+        .header p {
+            margin: 6px 0 0;
+            opacity: 0.9;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            margin: auto;
+            padding: 15px;
+        }
+
+        .controls {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .controls-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        select,
+        button,
+        .button {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 10px 13px;
+            font-size: 15px;
+            background: white;
+            text-decoration: none;
+            color: #222;
+            cursor: pointer;
+        }
+
+        select {
+            min-width: 180px;
+        }
+
+        .tafsir-on {
+            background: #0b6b4f;
+            color: white;
+            border-color: #0b6b4f;
+        }
+
+        .verse {
+            background: white;
+            border-radius: 14px;
+            margin-bottom: 15px;
+            padding: 18px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+        }
+
+        .verse-number {
+            display: inline-block;
+            background: #0b6b4f;
+            color: white;
+            min-width: 34px;
+            height: 34px;
+            line-height: 34px;
+            text-align: center;
+            border-radius: 50%;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+
+        .arabic {
+            direction: rtl;
+            text-align: right;
+            font-size: 30px;
+            line-height: 2.1;
+            margin: 10px 0 18px;
+            font-family: "Amiri", "Noto Naskh Arabic", serif;
+        }
+
+        .translation {
+            border-left: 4px solid #0b6b4f;
+            padding: 12px 15px;
+            background: #f1f8f5;
+            border-radius: 8px;
+            font-size: 17px;
+            line-height: 1.7;
+        }
+
+        .translation-label {
+            font-weight: bold;
+            color: #0b6b4f;
+            margin-bottom: 6px;
+        }
+
+        .tafsir {
+            margin-top: 15px;
+            padding: 14px;
+            background: #fff8e6;
+            border-left: 4px solid #d89b00;
+            border-radius: 8px;
+            line-height: 1.7;
+        }
+
+        .tafsir-title {
+            font-weight: bold;
+            color: #9a6b00;
+            margin-bottom: 6px;
+        }
+
+        .verse-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .action-button {
+            padding: 8px 11px;
+            border-radius: 7px;
+            border: 1px solid #ddd;
+            background: #fafafa;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin: 25px 0;
+        }
+
+        .navigation a {
+            flex: 1;
+            text-align: center;
+            background: #0b6b4f;
+            color: white;
+            padding: 12px;
+            border-radius: 9px;
+            text-decoration: none;
+        }
+
+        .back {
+            display: inline-block;
+            margin-bottom: 12px;
+            color: #0b6b4f;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .empty {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        @media (max-width: 600px) {
+
+            .header h1 {
+                font-size: 21px;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            .arabic {
+                font-size: 25px;
+                line-height: 2;
+            }
+
+            .translation {
+                font-size: 16px;
+            }
+
+            .controls-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            select,
+            button,
+            .button {
+                width: 100%;
+            }
+
+            .navigation {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="header">
+    <h1>
+        {{ surah.name_english }}
+    </h1>
+
+    <p>
+        سورة {{ surah.name_arabic }} · {{ surah.verses_count }} Verses
+    </p>
+</div>
+
+<div class="container">
+
+    <a class="back" href="/quran">
+        ← Back to Quran
+    </a>
+
+    <div class="controls">
+
+        <div class="controls-row">
+
+            <select id="languageSelect" onchange="changeLanguage(this.value)">
+
+                <option value="en"
+                    {% if selected_language == "en" %}selected{% endif %}>
+                    🇬🇧 English
+                </option>
+
+                <option value="am"
+                    {% if selected_language == "am" %}selected{% endif %}>
+                    🇪🇹 Amharic
+                </option>
+
+                <option value="om"
+                    {% if selected_language == "om" %}selected{% endif %}>
+                    Afaan Oromo
+                </option>
+
+                <option value="aa"
+                    {% if selected_language == "aa" %}selected{% endif %}>
+                    Afar
+                </option>
+
+                <option value="so"
+                    {% if selected_language == "so" %}selected{% endif %}>
+                    Somali
+                </option>
+
+            </select>
+
+            <a
+                class="button {% if show_tafsir %}tafsir-on{% endif %}"
+                href="/quran/{{ surah.number }}?lang={{ selected_language }}&tafsir={% if show_tafsir %}0{% else %}1{% endif %}"
+            >
+                {% if show_tafsir %}
+                    Hide Tafsir
+                {% else %}
+                    📖 Show Tafsir
+                {% endif %}
+            </a>
+
+        </div>
+
+    </div>
+
+
+    {% if verses %}
+
+        {% for verse in verses %}
+
+        <div class="verse">
+
+            <div class="verse-number">
+                {{ verse.verse_number }}
+            </div>
+
+            <div class="arabic">
+                {{ verse.arabic_text }}
+            </div>
+
+
+            <div class="translation">
+
+                <div class="translation-label">
+                    {{ language_name }}
+                </div>
+
+                {% if selected_language == "en" %}
+
+                    {{ verse.translation_en }}
+
+                {% elif selected_language == "am" %}
+
+                    {{ verse.translation_am }}
+
+                {% else %}
+
+                    {{ translation_map.get(verse.id, "Translation not available.") }}
+
+                {% endif %}
+
+            </div>
+
+
+            {% if show_tafsir %}
+
+            <div class="tafsir">
+
+                <div class="tafsir-title">
+                    📖 Tafsir
+                </div>
+
+                {{ tafsir_map.get(verse.id, "Tafsir not available.") }}
+
+            </div>
+
+            {% endif %}
+
+
+            <div class="verse-actions">
+
+                <form method="POST" action="/bookmark/{{ verse.id }}">
+                    <button class="action-button" type="submit">
+                        {% if verse.is_bookmarked %}
+                            ★ Bookmarked
+                        {% else %}
+                            ☆ Bookmark
+                        {% endif %}
+                    </button>
+                </form>
+
+                <form method="POST" action="/save-progress/{{ verse.id }}">
+                    <button class="action-button" type="submit">
+                        ✓ Save Progress
+                    </button>
+                </form>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <div class="empty">
+            <h2>No verses found</h2>
+            <p>This Surah does not currently contain verses in the database.</p>
+        </div>
+
+    {% endif %}
+
+
+    <div class="navigation">
+
+        {% if previous_surah %}
+
+        <a href="/quran/{{ previous_surah.number }}?lang={{ selected_language }}">
+            ← {{ previous_surah.name_english }}
+        </a>
+
+        {% else %}
+
+        <span></span>
+
+        {% endif %}
+
+
+        {% if next_surah %}
+
+        <a href="/quran/{{ next_surah.number }}?lang={{ selected_language }}">
+            {{ next_surah.name_english }} →
+        </a>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+
+<script>
+
+function changeLanguage(language) {
+
+    const url = new URL(window.location.href);
+
+    url.searchParams.set("lang", language);
+
+    window.location.href = url.toString();
+
+}
+
+</script>
+
+</body>
+</html>

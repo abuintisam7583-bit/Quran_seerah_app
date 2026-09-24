@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Quran Seerah</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f7f6;
+            color: #222;
+        }
+
+        header {
+            background: #123d2a;
+            color: white;
+            padding: 22px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        header p {
+            margin: 8px 0 0;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .welcome {
+            background: white;
+            border-radius: 18px;
+            padding: 25px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+        }
+
+        .welcome h2 {
+            margin-top: 0;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px 15px;
+            border-radius: 18px;
+            text-align: center;
+            text-decoration: none;
+            color: #222;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+        }
+
+        .icon {
+            font-size: 35px;
+            margin-bottom: 10px;
+        }
+
+        .card h3 {
+            margin: 5px 0;
+        }
+
+        .card p {
+            margin: 5px 0;
+            color: #666;
+            font-size: 14px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 10px;
+            color: #777;
+            font-size: 13px;
+        }
+
+        @media (max-width: 450px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Quran Seerah</h1>
+    <p>Read • Learn • Reflect</p>
+</header>
+
+<main class="container">
+
+    <section class="welcome">
+        <h2>Assalamu Alaikum</h2>
+        <p>
+            Welcome to Quran Seerah, a simple place to read
+            the Quran and learn about the life of Prophet Muhammad ﷺ.
+        </p>
+    </section>
+
+    <section class="grid">
+
+        <a href="/quran" class="card">
+            <div class="icon">📖</div>
+            <h3>Quran</h3>
+            <p>Read the Holy Quran</p>
+        </a>
+
+        <a href="/seerah" class="card">
+            <div class="icon">🕌</div>
+            <h3>Seerah</h3>
+            <p>Learn about the Prophet ﷺ</p>
+        </a>
+
+        <a href="/quran-search" class="card">
+            <div class="icon">🔎</div>
+            <h3>Search</h3>
+            <p>Search Quran and Seerah</p>
+        </a>
+
+        <a href="/bookmarks" class="card">
+            <div class="icon">🔖</div>
+            <h3>Bookmarks</h3>
+            <p>Your saved verses</p>
+        </a>
+
+    </section>
+
+</main>
+
+<footer>
+    Quran Seerah App — Version 1.0
+</footer>
+
+</body>
+</html>

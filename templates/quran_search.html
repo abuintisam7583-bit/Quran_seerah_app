@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Quran Search</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #f4f7f6;
+    color: #222;
+    font-family: Arial, sans-serif;
+}
+
+.header {
+    background: #0b6b4f;
+    color: white;
+    text-align: center;
+    padding: 22px 15px;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 27px;
+}
+
+.header p {
+    margin: 7px 0 0;
+}
+
+.container {
+    max-width: 900px;
+    margin: auto;
+    padding: 15px;
+}
+
+.back {
+    display: inline-block;
+    margin-bottom: 12px;
+    color: #0b6b4f;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.search-box {
+    background: white;
+    padding: 18px;
+    border-radius: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.07);
+    margin-bottom: 18px;
+}
+
+.search-form {
+    display: flex;
+    gap: 8px;
+}
+
+.search-input {
+    flex: 1;
+    min-width: 0;
+    padding: 13px;
+    border: 1px solid #ccc;
+    border-radius: 9px;
+    font-size: 16px;
+}
+
+.search-button {
+    padding: 13px 18px;
+    background: #0b6b4f;
+    color: white;
+    border: 0;
+    border-radius: 9px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.language-row {
+    margin-top: 12px;
+}
+
+.language-row select {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+    background: white;
+}
+
+.clear {
+    display: inline-block;
+    margin-top: 10px;
+    color: #b33;
+    text-decoration: none;
+}
+
+.result-info {
+    background: white;
+    padding: 14px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+.result {
+    background: white;
+    border-radius: 14px;
+    padding: 17px;
+    margin-bottom: 14px;
+    box-shadow: 0 2px 7px rgba(0,0,0,.06);
+}
+
+.result-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.surah-name {
+    color: #0b6b4f;
+    font-weight: bold;
+    font-size: 17px;
+}
+
+.verse-number {
+    background: #0b6b4f;
+    color: white;
+    padding: 5px 9px;
+    border-radius: 20px;
+    font-size: 13px;
+}
+
+.arabic {
+    direction: rtl;
+    text-align: right;
+    font-size: 25px;
+    line-height: 2;
+    margin: 10px 0 15px;
+    font-family: "Amiri", "Noto Naskh Arabic", serif;
+}
+
+.translation {
+    border-left: 4px solid #0b6b4f;
+    background: #f1f8f5;
+    padding: 12px 14px;
+    border-radius: 7px;
+    line-height: 1.7;
+}
+
+.open-button {
+    display: inline-block;
+    margin-top: 13px;
+    padding: 9px 12px;
+    background: #0b6b4f;
+    color: white;
+    text-decoration: none;
+    border-radius: 7px;
+    font-size: 14px;
+}
+
+.empty {
+    background: white;
+    padding: 30px 15px;
+    border-radius: 14px;
+    text-align: center;
+}
+
+@media (max-width: 600px) {
+
+    .search-form {
+        flex-direction: column;
+    }
+
+    .search-button {
+        width: 100%;
+    }
+
+    .result-header {
+        align-items: flex-start;
+    }
+
+    .arabic {
+        font-size: 23px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+
+<h1>🔎 Quran Search</h1>
+
+<p>Search the Holy Quran</p>
+
+</div>
+
+
+<div class="container">
+
+<a class="back" href="/quran">
+← Back to Quran
+</a>
+
+
+<div class="search-box">
+
+<form class="search-form" method="GET" action="/quran-search">
+
+<input
+class="search-input"
+type="search"
+name="q"
+value="{{ request.args.get('q', '') }}"
+placeholder="Search Arabic or English..."
+autocomplete="off"
+>
+
+<button class="search-button" type="submit">
+Search
+</button>
+
+</form>
+
+
+<div class="language-row">
+
+<select id="languageSelect" onchange="changeLanguage(this.value)">
+
+<option value="en" {% if selected_language == "en" %}selected{% endif %}>
+🇬🇧 English
+</option>
+
+<option value="am" {% if selected_language == "am" %}selected{% endif %}>
+🇪🇹 Amharic
+</option>
+
+<option value="om" {% if selected_language == "om" %}selected{% endif %}>
+Afaan Oromo
+</option>
+
+<option value="aa" {% if selected_language == "aa" %}selected{% endif %}>
+Afar
+</option>
+
+<option value="so" {% if selected_language == "so" %}selected{% endif %}>
+Somali
+</option>
+
+</select>
+
+</div>
+
+
+{% if request.args.get('q') %}
+
+<a
+class="clear"
+href="/quran-search"
+>
+✕ Clear search
+</a>
+
+{% endif %}
+
+</div>
+
+
+{% if request.args.get('q') %}
+
+<div class="result-info">
+
+<strong>Search:</strong>
+{{ request.args.get('q') }}
+
+</div>
+
+{% endif %}
+
+
+{% if results %}
+
+{% for result in results %}
+
+<div class="result">
+
+<div class="result-header">
+
+<div class="surah-name">
+
+{{ result.surah_name }}
+
+</div>
+
+<div class="verse-number">
+
+Verse {{ result.verse_number }}
+
+</div>
+
+</div>
+
+
+<div class="arabic">
+
+{{ result.arabic_text }}
+
+</div>
+
+
+<div class="translation">
+
+{% if result.translation %}
+
+{{ result.translation }}
+
+{% else %}
+
+No translation available.
+
+{% endif %}
+
+</div>
+
+
+<a
+class="open-button"
+href="/quran/{{ result.surah_number }}?lang={{ selected_language }}"
+>
+📖 Open Surah
+</a>
+
+</div>
+
+{% endfor %}
+
+{% else %}
+
+{% if request.args.get('q') %}
+
+<div class="empty">
+
+<h2>No results found</h2>
+
+<p>
+Try another Arabic or English word.
+</p>
+
+</div>
+
+{% else %}
+
+<div class="empty">
+
+<h2>🔎 Search the Quran</h2>
+
+<p>
+Enter a word or phrase to find verses.
+</p>
+
+</div>
+
+{% endif %}
+
+{% endif %}
+
+</div>
+
+
+<script>
+
+function changeLanguage(language) {
+
+    const url = new URL(window.location.href);
+
+    url.searchParams.set("lang", language);
+
+    window.location.href = url.toString();
+
+}
+
+</script>
+
+</body>
+</html>

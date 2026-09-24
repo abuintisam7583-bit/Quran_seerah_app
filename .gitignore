@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+.env
+.venv/
+venv/
+*.log
+
+database_PRODUCTION_BACKUP.db
+database_before_604_pages.db
+quran.db
+
+app_before_*
+templates/*_before_*
+templates/*_backup.*
+templates/*_simple_backup.*
+data/*_before_*

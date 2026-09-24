@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Juz - Quran</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f7f9;
+            color: #222;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #666;
+        }
+
+        .juz-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 15px;
+        }
+
+        .juz-card {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            background: white;
+            border-radius: 12px;
+            padding: 18px;
+            border: 1px solid #ddd;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .juz-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .juz-number {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .juz-range {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .back {
+            display: inline-block;
+            margin-bottom: 20px;
+            text-decoration: none;
+            color: #333;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <a href="/" class="back">← Home</a>
+
+    <div class="header">
+        <h1>📖 Quran Juz</h1>
+        <p>Browse the Holy Quran by 30 Juz</p>
+    </div>
+
+    <div class="juz-list">
+
+        {% for juz_number in range(1, 31) %}
+
+            {% set juz = juzs[juz_number|string] %}
+
+            <a href="/quran/juz/{{ juz_number }}" class="juz-card">
+
+                <div class="juz-number">
+                    Juz {{ juz_number }}
+                </div>
+
+                <div class="juz-range">
+                    {{ juz.first_verse_key }} → {{ juz.last_verse_key }}
+                </div>
+
+            </a>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+</body>
+</html>

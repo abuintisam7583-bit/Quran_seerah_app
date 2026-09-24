@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ chapter.title }} | {{ ui.seerah }}</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #f5f7fa;
+            color: #263238;
+            font-family: Arial, sans-serif;
+            line-height: 1.8;
+        }
+
+        .topbar {
+            background: #173b57;
+            color: white;
+            padding: 14px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .topbar a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .language {
+            padding: 8px 10px;
+            border-radius: 8px;
+            border: none;
+            font-size: 14px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 20px 15px 40px;
+        }
+
+        .chapter-card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px 20px;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+        }
+
+        .chapter-number {
+            display: inline-block;
+            background: #e8f1f7;
+            color: #173b57;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+
+        h1 {
+            margin: 0 0 20px;
+            color: #173b57;
+            font-size: 28px;
+            line-height: 1.35;
+        }
+
+        .content {
+            font-size: 17px;
+        }
+
+        .content p {
+            margin: 0 0 18px;
+        }
+
+        .navigation {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .navigation a {
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            text-decoration: none;
+            padding: 12px 10px;
+            border-radius: 10px;
+            background: #173b57;
+            color: white;
+            font-weight: bold;
+        }
+
+        .navigation a.secondary {
+            background: #e8edf1;
+            color: #263238;
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 20px;
+            color: #173b57;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        @media (max-width: 600px) {
+            .topbar {
+                padding: 12px 14px;
+            }
+
+            .container {
+                padding: 15px 10px 30px;
+            }
+
+            .chapter-card {
+                padding: 20px 16px;
+                border-radius: 12px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .content {
+                font-size: 16px;
+            }
+
+            .navigation {
+                flex-direction: column;
+            }
+
+            .navigation a {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="topbar">
+        <a href="{{ url_for('seerah') }}">📖 {{ ui.seerah }}</a>
+
+        <select class="language" onchange="changeLanguage(this.value)">
+            {% for code, name in languages.items() %}
+                <option value="{{ code }}" {% if code == lang %}selected{% endif %}>
+                    {{ name }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <main class="container">
+
+        <article class="chapter-card">
+
+            <div class="chapter-number">
+                {{ ui.chapter }} {{ chapter_id }}
+            </div>
+
+            <h1>{{ chapter.title }}</h1>
+
+            <div class="content">
+                {{ chapter.content|safe }}
+            </div>
+
+            <div class="navigation">
+
+                {% if previous_id %}
+                    <a href="{{ url_for('seerah_chapter', chapter_id=previous_id, lang=lang) }}">
+                        ← {{ ui.previous }}
+                    </a>
+                {% endif %}
+
+                <a class="secondary"
+                   href="{{ url_for('seerah', lang=lang) }}">
+                    {{ ui.all_chapters }}
+                </a>
+
+                {% if next_id %}
+                    <a href="{{ url_for('seerah_chapter', chapter_id=next_id, lang=lang) }}">
+                        {{ ui.next }} →
+                    </a>
+                {% endif %}
+
+            </div>
+
+            <a class="back" href="{{ url_for('seerah') }}">
+                ← {{ ui.back }}
+            </a>
+
+        </article>
+
+    </main>
+
+    <script>
+        function changeLanguage(lang) {
+            const url = new URL(window.location.href);
+            url.searchParams.set("lang", lang);
+            window.location.href = url.toString();
+        }
+    </script>
+
+</body>
+</html>
