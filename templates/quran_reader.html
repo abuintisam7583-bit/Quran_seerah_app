@@ -274,6 +274,12 @@ select {
 
 
 <div class="controls">
+    <div style="margin-bottom:10px;font-weight:bold;">Reading Settings</div>
+    <div class="controls-row">
+        <button type="button" onclick="changeFontSize(-1)">A−</button>
+        <button type="button" onclick="resetFontSize()">A</button>
+        <button type="button" onclick="changeFontSize(1)">A+</button>
+    </div>
 
 <div class="controls-row">
 
@@ -495,6 +501,38 @@ function changeLanguage(language) {
 
 }
 
+</script>
+
+
+<script>
+let readerFontLevel = 0;
+
+function applyReaderFontSize() {
+    const arabic = document.querySelectorAll(".arabic");
+    const translations = document.querySelectorAll(".translation");
+
+    arabic.forEach(el => {
+        el.style.fontSize = (25 + readerFontLevel * 2) + "px";
+    });
+
+    translations.forEach(el => {
+        el.style.fontSize = (16 + readerFontLevel * 1) + "px";
+    });
+}
+
+function changeFontSize(amount) {
+    readerFontLevel += amount;
+
+    if (readerFontLevel < -2) readerFontLevel = -2;
+    if (readerFontLevel > 3) readerFontLevel = 3;
+
+    applyReaderFontSize();
+}
+
+function resetFontSize() {
+    readerFontLevel = 0;
+    applyReaderFontSize();
+}
 </script>
 
 </body>
