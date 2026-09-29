@@ -505,7 +505,10 @@ function changeLanguage(language) {
 
 
 <script>
-let readerFontLevel = 0;
+let readerFontLevel = parseInt(
+    localStorage.getItem("quranReaderFontLevel") || "0",
+    10
+);
 
 function applyReaderFontSize() {
     const arabic = document.querySelectorAll(".arabic");
@@ -520,19 +523,30 @@ function applyReaderFontSize() {
     });
 }
 
+function saveReaderFontSize() {
+    localStorage.setItem(
+        "quranReaderFontLevel",
+        readerFontLevel.toString()
+    );
+}
+
 function changeFontSize(amount) {
     readerFontLevel += amount;
 
     if (readerFontLevel < -2) readerFontLevel = -2;
     if (readerFontLevel > 3) readerFontLevel = 3;
 
+    saveReaderFontSize();
     applyReaderFontSize();
 }
 
 function resetFontSize() {
     readerFontLevel = 0;
+    saveReaderFontSize();
     applyReaderFontSize();
 }
+
+document.addEventListener("DOMContentLoaded", applyReaderFontSize);
 </script>
 
 </body>
