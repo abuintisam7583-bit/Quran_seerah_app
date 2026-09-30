@@ -16,6 +16,41 @@ body {
     background: #f4f7f6;
     color: #222;
     font-family: Arial, sans-serif;
+    transition: background .2s ease, color .2s ease;
+}
+
+body.dark-mode {
+    background: #121212;
+    color: #eeeeee;
+}
+
+body.dark-mode .controls,
+body.dark-mode .verse,
+body.dark-mode .progress-box {
+    background: #1e1e1e;
+    color: #eeeeee;
+}
+
+body.dark-mode select,
+body.dark-mode button,
+body.dark-mode .button {
+    background: #2a2a2a;
+    color: #eeeeee;
+    border-color: #555;
+}
+
+body.dark-mode .translation {
+    background: #26352f;
+    color: #eeeeee;
+}
+
+body.dark-mode .tafsir {
+    background: #332d1f;
+    color: #eeeeee;
+}
+
+body.dark-mode .top-link {
+    color: #65c9a5;
 }
 
 .header {
@@ -276,6 +311,7 @@ select {
 <div class="controls">
     <div style="margin-bottom:10px;font-weight:bold;">Reading Settings</div>
     <div class="controls-row">
+        <button type="button" onclick="toggleDarkMode()" id="darkModeButton">🌙 Dark Mode</button>
         <button type="button" onclick="changeFontSize(-1)">A−</button>
         <button type="button" onclick="resetFontSize()">A</button>
         <button type="button" onclick="changeFontSize(1)">A+</button>
@@ -546,7 +582,26 @@ function resetFontSize() {
     applyReaderFontSize();
 }
 
-document.addEventListener("DOMContentLoaded", applyReaderFontSize);
+function applyDarkMode() {
+    const enabled = localStorage.getItem("quranReaderDarkMode") === "true";
+    document.body.classList.toggle("dark-mode", enabled);
+
+    const button = document.getElementById("darkModeButton");
+    if (button) {
+        button.textContent = enabled ? "☀️ Light Mode" : "🌙 Dark Mode";
+    }
+}
+
+function toggleDarkMode() {
+    const enabled = document.body.classList.contains("dark-mode");
+    localStorage.setItem("quranReaderDarkMode", (!enabled).toString());
+    applyDarkMode();
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    applyReaderFontSize();
+    applyDarkMode();
+});
 </script>
 
 </body>
