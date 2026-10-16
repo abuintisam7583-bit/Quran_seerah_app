@@ -114,6 +114,14 @@
             Welcome to Quran Seerah, a simple place to read
             the Quran and learn about the life of Prophet Muhammad ﷺ.
         </p>
+        <div style="text-align:center; margin-top:22px;">
+            <button id="installAppBtn" type="button"
+                style="background:#123d2a;color:white;border:0;border-radius:12px;padding:14px 22px;font-size:16px;font-weight:bold;cursor:pointer;">
+                📲 Install Quran &amp; Seerah App
+            </button>
+            <p id="installAppMessage" role="status"
+                style="font-size:14px;color:#555;margin-top:10px;"></p>
+        </div>
     </section>
 
     <section class="grid">
@@ -163,6 +171,29 @@ if ("serviceWorker" in navigator) {
     });
   });
 }
+</script>
+\n
+<script>
+let deferredInstallPrompt = null;
+const installButton = document.getElementById("installAppBtn");
+const installMessage = document.getElementById("installAppMessage");
+
+window.addEventListener("beforeinstallprompt", (event) => {
+    event.preventDefault();
+    deferredInstallPrompt = event;
+});
+
+installButton.addEventListener("click", async () => {
+    if (deferredInstallPrompt) {
+        deferredInstallPrompt.prompt();
+        await deferredInstallPrompt.userChoice;
+        deferredInstallPrompt = null;
+        return;
+    }
+
+    installMessage.textContent =
+        "To add this app to your home screen, open your browser menu (⋮) and choose 'Add to Home screen' or 'Install app'. If that option is unavailable, you can continue using the website in your browser.";
+});
 </script>
 \n</body>
 </html>
